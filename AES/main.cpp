@@ -2,6 +2,7 @@
 #include <array>
 #include <cstdint>
 #include "common/helpers.h"
+#include "AES/AES.h"
 
 
 
@@ -15,7 +16,6 @@ int main()
 
     std::cout << "Library Output: ";
     block result = lib_encrypt(text, key);
-
     std::cout << result << std::endl;
 
     return 0;
