@@ -9,12 +9,12 @@
 
 namespace AES
 {
-	using block128 = std::array<uint8_t, 16>;
+	class AES128;
 
+	using block128 = std::array<uint8_t, 16>;
 	using row128 = std::array<uint8_t, 4>;
 	using col128 = std::array<uint8_t, 4>;
-
-	class AES128;
+		
 
 	class AES128
 	{
