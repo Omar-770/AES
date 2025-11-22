@@ -35,7 +35,6 @@ namespace AES
 	{
 		std::array<col128, 4> cols;
 		
-		//create mix_matrix
 		std::array<row128, 4> mix_matrix =
 		{
 			row128{2, 3, 1, 1},
@@ -44,12 +43,10 @@ namespace AES
 			row128{3, 1, 1, 2}
 		};
 
-		//copy columns
 		for (int i = 0; i < cols.size(); i++)
 			for (int j = 0; j < cols[i].size(); j++)
 				cols[i][j] = b[4 * i + j];
 
-		//multiply mix_matrix with columns
 		for (int i = 0; i < cols.size(); i++)
 			for (int j = 0; j < cols[j].size(); j++)
 			{
