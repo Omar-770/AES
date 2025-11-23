@@ -14,9 +14,33 @@ int main()
     block text = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
                   0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff };
 
-    std::cout << "Library Output: ";
-    block result = lib_encrypt(text, key);
-    std::cout << result << std::endl;
+
+    AES::AES128 e;
+    block my_result = e.encrypt(text, key);
+    block lib_result = lib_encrypt(text, key);
+
+    bool pass = compare(my_result, lib_result);
+    if(pass)
+    {
+        std::cout << "===================================\n";
+        std::cout << "\tEncryption Complete\n";
+        std::cout << "===================================\n\n";
+    }
+    else
+    {
+        std::cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
+        std::cout << "\tEncryption Inomplete\n";
+        std::cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n";
+    }
+
+    std::cout << "Library Output: ";    
+    std::cout << lib_result << std::endl;
+
+    std::cout << "\n\nMy output: ";
+    std::cout << my_result << std::endl;
+
+     
+   
 
     return 0;
 }

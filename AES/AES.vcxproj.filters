@@ -29,7 +29,7 @@
     <ClInclude Include="src\AES\AES.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\common\sbox.h">
+    <ClInclude Include="src\common\constants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,9 +2,44 @@
 
 namespace AES
 {
+	block128 AES128::encrypt(const block128& plaintext, const block128& key)
+	{
+		//build the state
+		block128 state = plaintext;
+
+		//expand key
+		std::array<block128, 11> keys = expand_key(key);
+
+		//round 1
+		add_round_key(state, keys[0]);
+
+		//rounds 1 - 9
+
+		for (int i = 1; i <= 9; i++)
+		{
+			sub_bytes(state);
+			shift_rows(state);
+			mix_columns(state);
+			add_round_key(state, keys[i]);
+		}
+
+		//round 10
+
+		sub_bytes(state);
+		shift_rows(state);
+		add_round_key(state, keys[10]);
+
+		return state;
+	}
 	void AES128::sub_bytes(block128& b)
 	{
 		for (auto& elem : b)
+			elem = SBOX[elem];
+	}
+
+	void AES128::sub_bytes(word& word)
+	{
+		for (auto& elem : word)
 			elem = SBOX[elem];
 	}
 
@@ -48,15 +83,14 @@ namespace AES
 				cols[i][j] = b[4 * i + j];
 
 		for (int i = 0; i < cols.size(); i++)
-			for (int j = 0; j < cols[j].size(); j++)
+			for (int j = 0; j < cols[i].size(); j++)
 			{
 				uint8_t temp = 0;
 				for (int k = 0; k < cols[j].size(); k++)
-					temp ^= multiply_g(mix_matrix[j][k], cols[i][k]);
-									
+					temp ^= multiply_g(cols[i][k], mix_matrix[j][k]);
+				
 				b[4 * i + j] = temp;
 			}
-			
 	}
 
 	uint8_t AES128::multiply_g(uint8_t x, uint8_t y)
@@ -74,6 +108,7 @@ namespace AES
 			return x;
 		};
 
+		uint8_t _2x{};
 		switch (y)
 		{
 		case 0:
@@ -89,7 +124,7 @@ namespace AES
 			break;
 
 		case 3:
-			uint8_t _2x = multiply_2(x);
+			_2x = multiply_2(x);
 			return _2x ^ x;
 			break;
 
@@ -98,5 +133,42 @@ namespace AES
 		}
 
 		return x;
+	}
+
+	void AES128::add_round_key(block128& state, const block128& key)
+	{
+		for (int i = 0; i < state.size(); i++)
+			state[i] ^= key[i];
+	}
+
+	std::array<block128, 11> AES128::expand_key(const block128& key)
+	{
+		std::array<word, 44> words;
+		for (int i = 0; i < 4; i++)
+			for(int j = 0; j < 4; j++)
+				words[i][j] = key[4 * i + j];
+
+		word temp;
+		for (int i = 4; i < 44; i++)
+		{
+			temp = words[i - 1];
+			if (i % 4 == 0)
+			{
+				shift_row(temp, 1);
+				sub_bytes(temp);
+				temp[0] ^= RCON[i / 4];
+			}
+
+			for(int j = 0; j < 4; j++)
+				words[i][j] = words[i - 4][j] ^ temp[j];
+		}
+
+		std::array<block128, 11> expanded_key;
+		for (int i = 0; i < 11; i++)
+			for (int j = 0; j < 4; j++)
+				for (int k = 0; k < 4; k++)
+					expanded_key[i][4 * j + k] = words[4 * i + j][k];
+
+		return expanded_key;
 	}
 }

@@ -32,3 +32,12 @@ std::ostream& operator<<(std::ostream& stream, const block& data)
     stream.flags(f);
     return stream;
 }
+
+bool compare(const block& a, const block& b)
+{
+    for (int i = 0; i < a.size(); i++)
+        if (a[i] != b[i])
+            return false;
+
+    return true;
+}
