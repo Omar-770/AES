@@ -26,6 +26,7 @@ std::ostream& operator<<(std::ostream& stream, const block& data)
 
     for (auto& elem : data)
     {
+        stream << static_cast<int>(elem) << ' ';
     }
 
     stream.flags(f);
