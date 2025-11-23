@@ -23,7 +23,7 @@ int main()
     if(pass)
     {
         std::cout << "===================================\n";
-        std::cout << "\tEncryption Complete\n";
+        std::cout << "\tEncryption Complete\n"; 
         std::cout << "===================================\n\n";
     }
     else
